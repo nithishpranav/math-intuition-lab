@@ -10,13 +10,11 @@
 // ------------------------------------------------------------------
 
 export const firebaseConfig = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: "",
+  apiKey: "AIzaSyAzbVdo4dfMrWfnjeRFFyxcco2cTeTPpc0",
+  authDomain: "math-intuition-lab.firebaseapp.com",
+  projectId: "math-intuition-lab",
+  storageBucket: "math-intuition-lab.firebasestorage.app",
+  messagingSenderId: "947095299555",
+  appId: "1:947095299555:web:f93e1af5a2cfab5d362cd6",
 };
-
-// Set to true ONLY after filling in the config above.
-export const FIREBASE_ON = false;
+export const FIREBASE_ON = true;
