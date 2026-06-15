@@ -5,5 +5,5 @@ import react from "@vitejs/plugin-react";
 // set base to "/REPO/". For a custom domain or local use, keep "/".
 export default defineConfig({
   plugins: [react()],
-  base: "./",
+  base: "/math-intuition-lab/",
 });
