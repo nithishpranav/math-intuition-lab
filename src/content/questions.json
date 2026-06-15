@@ -1,0 +1,1091 @@
+[
+  {
+    "t": "notation",
+    "q": "In a paper you see Σᵢ wᵢxᵢ. The direct Python equivalent?",
+    "o": [
+      "np.dot(w, x)",
+      "np.outer(w, x)",
+      "np.cumsum(w * x)",
+      "(w + x).sum()"
+    ],
+    "w": "Σ of pairwise products is exactly a dot product. cumsum keeps partial sums; outer builds an n×n matrix."
+  },
+  {
+    "t": "notation",
+    "q": "Likelihoods are products ∏ᵢ pᵢ. Why optimize the log instead?",
+    "o": [
+      "Products of many small probabilities underflow; log turns ∏ into Σ with the same argmax",
+      "Log makes any function convex",
+      "Logs force probabilities to sum to 1",
+      "Bayes' theorem requires it"
+    ],
+    "w": "log is monotonic, so the maximizer is unchanged — and 1,000 probabilities multiplied is numerically ~0."
+  },
+  {
+    "t": "notation",
+    "q": "argmaxₓ f(x) returns…",
+    "o": [
+      "The x where f peaks — not the peak value",
+      "The maximum value of f",
+      "The gradient at the peak",
+      "All local maxima"
+    ],
+    "w": "max gives the height; argmax gives the location. Classifiers predict argmax over class probabilities."
+  },
+  {
+    "t": "notation",
+    "q": "For θ ∈ ℝᵈ, ∇L(θ) is…",
+    "o": [
+      "A d-vector of partial derivatives",
+      "A single number",
+      "A d×d matrix",
+      "Always positive"
+    ],
+    "w": "One slope per parameter. The d×d matrix of second derivatives is the Hessian."
+  },
+  {
+    "t": "notation",
+    "q": "‖w‖² appearing in a loss (ridge) means…",
+    "o": [
+      "Σ wᵢ² — penalize large weights",
+      "Σ |wᵢ|",
+      "Count of nonzero weights",
+      "max |wᵢ|"
+    ],
+    "w": "Σ|wᵢ| is L1/lasso, which drives weights to exact zero; counting nonzeros is L0."
+  },
+  {
+    "t": "notation",
+    "q": "𝟙[x > 0] evaluates to…",
+    "o": [
+      "1 if the condition holds, else 0",
+      "x if positive, else 0",
+      "P(x > 0)",
+      "sign(x)"
+    ],
+    "w": "'x if positive else 0' is ReLU — related but different. Indicators turn logic into arithmetic so it can live inside a Σ."
+  },
+  {
+    "t": "notation",
+    "q": "X is n×d. The shape of XᵀX is…",
+    "o": [
+      "d×d",
+      "n×n",
+      "n×d",
+      "1×1"
+    ],
+    "w": "(d×n)(n×d) = d×d — the feature Gram matrix at the heart of OLS: β̂ = (XᵀX)⁻¹Xᵀy."
+  },
+  {
+    "t": "notation",
+    "q": "⊙ between two same-shape vectors means…",
+    "o": [
+      "Element-wise (Hadamard) product",
+      "Dot product",
+      "Outer product",
+      "Convolution"
+    ],
+    "w": "FiLM's γ(s) ⊙ h is exactly this: each feature scaled by its own γᵢ."
+  },
+  {
+    "t": "logistic",
+    "q": "Your PD model has β = 0.7 on DTI. Per unit of DTI, what increases by 0.7?",
+    "o": [
+      "The log-odds of default",
+      "The probability of default",
+      "The default rate in %",
+      "The AUC"
+    ],
+    "w": "Odds multiply by e^0.7 ≈ 2×. The probability change depends on where you sit on the S-curve — steepest near PD = 0.5."
+  },
+  {
+    "t": "logistic",
+    "q": "σ(0) = ?",
+    "o": [
+      "0.5",
+      "0",
+      "1",
+      "Undefined"
+    ],
+    "w": "z = 0 means evidence is perfectly balanced — a coin flip."
+  },
+  {
+    "t": "logistic",
+    "q": "Logistic regression's decision boundary in feature space is…",
+    "o": [
+      "Linear — a hyperplane",
+      "S-shaped",
+      "Circular",
+      "Quadratic"
+    ],
+    "w": "PD = 0.5 ⟺ β·x = 0, a hyperplane. The S-curve lives in probability space, not feature space. Frequent interview trap."
+  },
+  {
+    "t": "logistic",
+    "q": "Why model log-odds (not probability) as the linear part?",
+    "o": [
+      "Log-odds range over (−∞, ∞), matching what a linear function produces",
+      "Probabilities can't be estimated",
+      "Log-odds are always positive",
+      "Regulators require it"
+    ],
+    "w": "A line outputs any real number; probability must live in (0,1). The logit link resolves the mismatch."
+  },
+  {
+    "t": "logistic",
+    "q": "Odds of default are 3:1. PD = ?",
+    "o": [
+      "0.75",
+      "0.33",
+      "0.25",
+      "3.0"
+    ],
+    "w": "p = odds/(1+odds) = 3/4. Odds ↔ probability conversion should be automatic in interviews."
+  },
+  {
+    "t": "logistic",
+    "q": "You rescale income from ₹ to ₹ lakhs (÷10⁵) and refit. Its coefficient…",
+    "o": [
+      "Multiplies by 10⁵",
+      "Is unchanged",
+      "Divides by 10⁵",
+      "Flips sign"
+    ],
+    "w": "β·x must produce the same log-odds: shrink x, β grows to compensate. Predictions and AUC are untouched."
+  },
+  {
+    "t": "logistic",
+    "q": "σ′ = σ(1−σ) peaks at 0.25. Why does this matter in deep nets?",
+    "o": [
+      "Each sigmoid layer multiplies gradients by ≤ 0.25 — vanishing gradients",
+      "It speeds up training",
+      "It guarantees convexity",
+      "It explodes gradients"
+    ],
+    "w": "Ten saturated sigmoid layers ⇒ gradient scaled by ~0.25¹⁰ ≈ 10⁻⁶. Why ReLU and LayerNorm exist."
+  },
+  {
+    "t": "attention",
+    "q": "Add +10 to every logit before softmax. The probabilities…",
+    "o": [
+      "Are exactly unchanged",
+      "All increase",
+      "Become more peaked",
+      "Sum to more than 1"
+    ],
+    "w": "Shift invariance: e^(z+c) factors out of numerator and denominator. Only gaps between logits matter."
+  },
+  {
+    "t": "attention",
+    "q": "Production softmax code subtracts max(z) before exp. Purpose?",
+    "o": [
+      "Numerical stability only — mathematically identical",
+      "Faster convergence",
+      "Makes outputs sum to 1",
+      "Regularization"
+    ],
+    "w": "e^800 overflows to inf. Subtracting the max keeps exponents ≤ 0 — a free trick thanks to shift invariance."
+  },
+  {
+    "t": "attention",
+    "q": "Temperature T → 0 in softmax(z/T) gives…",
+    "o": [
+      "One-hot on the largest logit — argmax",
+      "Uniform distribution",
+      "All zeros",
+      "Random output"
+    ],
+    "w": "Tiny T blows up the gaps; the leader takes everything. T → ∞ flattens to uniform. Same lever as greedy vs creative LLM sampling."
+  },
+  {
+    "t": "attention",
+    "q": "Why divide by √d in attention?",
+    "o": [
+      "Dot-product variance grows with dimension; scaling keeps softmax out of saturation",
+      "To match Q and K sizes",
+      "To normalize V",
+      "To save compute"
+    ],
+    "w": "q·k sums d variance contributions ⇒ std ∝ √d. Unscaled, softmax goes one-hot and gradients through it die."
+  },
+  {
+    "t": "attention",
+    "q": "In self-attention, Q, K, V come from…",
+    "o": [
+      "Three learned linear projections of the same input",
+      "Three different sentences",
+      "Fixed positional encodings",
+      "The decoder only"
+    ],
+    "w": "Same input X, three learned matrices: XW_Q, XW_K, XW_V. 'Self' = queries and keys come from one sequence."
+  },
+  {
+    "t": "attention",
+    "q": "The attention weights for one query token always…",
+    "o": [
+      "Sum to 1 — each row is a softmax",
+      "Sum to 0",
+      "Are all equal",
+      "Are binary"
+    ],
+    "w": "Each output is a convex combination — a weighted average — of value vectors. Nothing more exotic than that."
+  },
+  {
+    "t": "attention",
+    "q": "The gradient of softmax + cross-entropy w.r.t. the logits is famously…",
+    "o": [
+      "p − y",
+      "y − p²",
+      "log(p/y)",
+      "p · y"
+    ],
+    "w": "Predicted minus true — push down what you over-believed. This clean form is why the pairing is universal."
+  },
+  {
+    "t": "optimize",
+    "q": "The gradient points toward…",
+    "o": [
+      "Steepest increase — which is why we subtract it",
+      "Steepest decrease",
+      "The nearest minimum",
+      "The global minimum"
+    ],
+    "w": "∇L points uphill; θ − η∇L walks downhill. It knows nothing about minima — only the local slope."
+  },
+  {
+    "t": "optimize",
+    "q": "Learning rate too large — the classic symptom:",
+    "o": [
+      "Loss oscillates or explodes",
+      "Loss falls too smoothly",
+      "Overfitting",
+      "Gradient becomes exactly zero"
+    ],
+    "w": "You repeatedly overshoot the valley floor and climb the far wall. Recreate it in the ∇ tab: η > 1, press ×10."
+  },
+  {
+    "t": "optimize",
+    "q": "The 'stochastic' in SGD refers to…",
+    "o": [
+      "Estimating the gradient on a random minibatch — noisy but cheap",
+      "Random weight init",
+      "A random loss function",
+      "A random learning rate"
+    ],
+    "w": "Bonus: that noise helps hop out of shallow local minima and saddle points. The imperfection is a feature."
+  },
+  {
+    "t": "optimize",
+    "q": "Why standardize features before gradient descent (trees don't care)?",
+    "o": [
+      "Uneven scales create stretched loss valleys — GD zigzags slowly",
+      "It moves the optimum somewhere better",
+      "It prevents overfitting",
+      "Trees secretly need it too"
+    ],
+    "w": "Income in ₹ vs age in years ⇒ a canyon-shaped loss surface. Trees split on order, so monotone rescaling changes nothing for them."
+  },
+  {
+    "t": "optimize",
+    "q": "Convexity buys you…",
+    "o": [
+      "Any local minimum is the global minimum",
+      "Faster epochs",
+      "No learning rate needed",
+      "Zero training error"
+    ],
+    "w": "Logistic loss is convex — your PD fit can't get trapped. Deep nets surrender this guarantee and survive anyway."
+  },
+  {
+    "t": "optimize",
+    "q": "Adam differs from vanilla SGD mainly by…",
+    "o": [
+      "Per-parameter adaptive step sizes from gradient moment estimates",
+      "Using the full-batch gradient",
+      "Skipping backprop",
+      "Guaranteeing the global minimum"
+    ],
+    "w": "It tracks running means of gradients (momentum) and squared gradients (scale), giving each weight its own effective η."
+  },
+  {
+    "t": "optimize",
+    "q": "Early stopping is regularization because…",
+    "o": [
+      "It halts before the model memorizes training noise, using validation loss as referee",
+      "It shrinks the learning rate",
+      "It adds an L2 penalty",
+      "It reduces the dataset"
+    ],
+    "w": "Train loss falls forever; validation loss U-turns. Stop at the bottom of the U. Cheapest regularizer in existence."
+  },
+  {
+    "t": "probability",
+    "q": "EL = PD × LGD × EAD is, in notation terms…",
+    "o": [
+      "An expectation — E[Loss]",
+      "A variance",
+      "An MLE",
+      "A percentile"
+    ],
+    "w": "Expected loss is E[L] over default scenarios. Unexpected loss (capital) is a high quantile of the same distribution."
+  },
+  {
+    "t": "probability",
+    "q": "E[aX + b] = ?",
+    "o": [
+      "aE[X] + b",
+      "aE[X]",
+      "a²E[X] + b",
+      "E[X] + ab"
+    ],
+    "w": "Linearity of expectation — holds even for dependent variables. Variance differs: Var(aX+b) = a²Var(X); b vanishes."
+  },
+  {
+    "t": "probability",
+    "q": "Var(X) in expectations:",
+    "o": [
+      "E[X²] − (E[X])²",
+      "E[X²] + (E[X])²",
+      "(E[X])² − E[X²]",
+      "E[X − μ]"
+    ],
+    "w": "Mean of squares minus square of mean. If they were equal, X would be a constant."
+  },
+  {
+    "t": "probability",
+    "q": "X and Y independent ⟺",
+    "o": [
+      "P(X,Y) = P(X)·P(Y)",
+      "P(X,Y) = P(X) + P(Y)",
+      "Cov(X,Y) = 1",
+      "E[X] = E[Y]"
+    ],
+    "w": "Independence implies zero covariance, but zero covariance does NOT imply independence — a favorite follow-up."
+  },
+  {
+    "t": "probability",
+    "q": "A default flag fires with 90% sensitivity, but only 2% of loans default. P(default | flag) depends critically on…",
+    "o": [
+      "The base rate — Bayes' theorem",
+      "Sensitivity alone",
+      "Sample size only",
+      "The model's AUC"
+    ],
+    "w": "With rare events, even a strong signal yields mostly false alarms — precision can land under 20%. Run the 2% prior through Bayes."
+  },
+  {
+    "t": "probability",
+    "q": "E[X] for one fair die roll:",
+    "o": [
+      "3.5",
+      "3",
+      "4",
+      "Undefined — a die can't show 3.5"
+    ],
+    "w": "Σ x·p = 21/6 = 3.5. The expectation needn't be an achievable outcome — it's a balance point, not a prediction."
+  },
+  {
+    "t": "stats",
+    "q": "Within μ ± 2σ of a Gaussian lies about…",
+    "o": [
+      "95% of the mass",
+      "68%",
+      "99.7%",
+      "50%"
+    ],
+    "w": "68 / 95 / 99.7 for 1σ / 2σ / 3σ. Why '2-sigma event' is shorthand for roughly 1-in-20."
+  },
+  {
+    "t": "stats",
+    "q": "A z-score of −2.5 on FICO means…",
+    "o": [
+      "2.5 standard deviations below the mean",
+      "A FICO of −2.5",
+      "Exactly the 2.5th percentile",
+      "An outlier by definition"
+    ],
+    "w": "z = (x−μ)/σ — distance from center in units of spread. Standardization makes any two features comparable."
+  },
+  {
+    "t": "stats",
+    "q": "Why squared error (x−μ)² rather than |x−μ| across so much of statistics?",
+    "o": [
+      "Smooth and differentiable everywhere, and it's the Gaussian MLE",
+      "Squares are smaller",
+      "Absolute values can be negative",
+      "Pure convention"
+    ],
+    "w": "Minimizing squared error ⟺ MLE under Gaussian noise. The mean minimizes Σ(x−c)²; the median minimizes Σ|x−c|."
+  },
+  {
+    "t": "stats",
+    "q": "Mortgage losses are 'heavy-tailed' means…",
+    "o": [
+      "Extreme losses occur far more often than a Gaussian predicts",
+      "The mean is large",
+      "The distribution is symmetric",
+      "Losses are bounded"
+    ],
+    "w": "A Gaussian assigns ~zero probability to 2008. This single fact is why stress testing — your day job — exists."
+  },
+  {
+    "t": "stats",
+    "q": "The CLT says sums/averages of many independent effects tend toward…",
+    "o": [
+      "A normal distribution, whatever each effect's shape",
+      "A uniform distribution",
+      "The largest single effect",
+      "Zero"
+    ],
+    "w": "Aggregation manufactures Gaussians. Caveat: fails under heavy tails or strong dependence — see 2008, again."
+  },
+  {
+    "t": "stats",
+    "q": "Prefer the median over the mean when…",
+    "o": [
+      "The distribution is skewed or outlier-prone, e.g. income",
+      "Data is normal",
+      "You need linearity",
+      "n is large"
+    ],
+    "w": "One billionaire drags a neighborhood's mean income; the median doesn't move. Robustness vs algebraic convenience."
+  },
+  {
+    "t": "info",
+    "q": "Cross-entropy punishes hardest:",
+    "o": [
+      "Confident wrong predictions — −log p → ∞ as p → 0 on the truth",
+      "All errors equally",
+      "Underconfident correct predictions",
+      "Predictions near 0.5"
+    ],
+    "w": "PD = 0.001 on a loan that defaults costs −log(0.001) ≈ 6.9 — vs 0.69 for an honest 'don't know' at 0.5."
+  },
+  {
+    "t": "info",
+    "q": "KL(P‖Q) = 0 exactly when…",
+    "o": [
+      "P = Q everywhere",
+      "P and Q overlap at all",
+      "Q is uniform",
+      "Never — it's strictly positive"
+    ],
+    "w": "Zero iff identical, never negative (Gibbs' inequality). Any belief differing from reality costs surprise."
+  },
+  {
+    "t": "info",
+    "q": "KL(P‖Q) vs KL(Q‖P):",
+    "o": [
+      "Generally different — KL is asymmetric, so not a true distance",
+      "Always equal",
+      "Always negatives of each other",
+      "Both bounded by 1"
+    ],
+    "w": "Direction matters: KL(P‖Q) punishes Q for assigning low mass where reality P lives. Try it in the KL tab."
+  },
+  {
+    "t": "info",
+    "q": "PSI, your model-monitoring drift metric, is essentially…",
+    "o": [
+      "Symmetrized KL: Σ (pᵢ − qᵢ)·ln(pᵢ/qᵢ)",
+      "A correlation coefficient",
+      "A Kolmogorov–Smirnov statistic",
+      "An AUC difference"
+    ],
+    "w": "Same log-ratio core, summed in both directions. You've been computing KL in production for years without the name."
+  },
+  {
+    "t": "info",
+    "q": "Log-loss of predicting p = 0.5 on every loan:",
+    "o": [
+      "−log(0.5) ≈ 0.693 per loan — the know-nothing baseline",
+      "0",
+      "1",
+      "Infinite"
+    ],
+    "w": "Any trained model must beat 0.693. A useful sanity anchor when someone quotes log-loss without context."
+  },
+  {
+    "t": "deep",
+    "q": "FiLM conditioning applies, per feature:",
+    "o": [
+      "A scale γ(s) and a shift β(s), both computed from a conditioning input s",
+      "A convolution",
+      "Dropout driven by s",
+      "Attention over s"
+    ],
+    "w": "h̃ = γ(s) ⊙ h + β(s). In your paper: s = the macro scenario, h = the loan embedding. Two numbers per feature — the whole trick."
+  },
+  {
+    "t": "deep",
+    "q": "LayerNorm normalizes across…",
+    "o": [
+      "The features of a single sample",
+      "The batch dimension",
+      "Time steps only",
+      "The vocabulary"
+    ],
+    "w": "BatchNorm averages over the batch — awkward for variable-length sequences and small batches. Transformers use LayerNorm."
+  },
+  {
+    "t": "deep",
+    "q": "Why does LayerNorm keep learnable γ and β after standardizing?",
+    "o": [
+      "So the network can undo or reshape the normalization — restoring expressive power",
+      "To make outputs Gaussian",
+      "To prevent overfitting",
+      "They aren't learnable"
+    ],
+    "w": "Strict mean-0/std-1 would limit the layer. FiLM is exactly this affine pair, generated dynamically instead of learned as constants."
+  },
+  {
+    "t": "deep",
+    "q": "Vanishing gradients arise because…",
+    "o": [
+      "Backprop multiplies many small derivatives (saturated activations) through depth",
+      "Learning rates are too big",
+      "The loss is non-convex",
+      "Batches are too large"
+    ],
+    "w": "Chain rule = a product of layer derivatives. Many factors < 1 ⇒ exponential decay. Fixes: ReLU, residuals, normalization."
+  },
+  {
+    "t": "deep",
+    "q": "An embedding is…",
+    "o": [
+      "A learned dense vector representing a discrete thing — a loan, a word, a token",
+      "A one-hot vector",
+      "A normalization layer",
+      "A loss function"
+    ],
+    "w": "One-hot says 'which one'; an embedding says 'what it's like' — distances become meaningful. Your encoder's h is this, for loans."
+  },
+  {
+    "t": "deep",
+    "q": "Residual connections (x + f(x)) help mainly by…",
+    "o": [
+      "Giving gradients a direct path through depth — the identity's derivative is 1",
+      "Reducing parameter count",
+      "Adding regularization noise",
+      "Making the model convex"
+    ],
+    "w": "Each block learns a correction to identity, not a full mapping. Gradients flow through the '+' untouched — depth stops killing them."
+  },
+  {
+    "t": "biasvar",
+    "q": "High train error AND high test error means…",
+    "o": [
+      "High bias — the model family is too stiff (underfitting)",
+      "High variance — overfitting",
+      "Data leakage",
+      "Bad random seed"
+    ],
+    "w": "Both errors high = the family can't represent the truth. More data won't fix it; more capacity or better features will."
+  },
+  {
+    "t": "biasvar",
+    "q": "Which penalty drives coefficients to EXACT zero?",
+    "o": [
+      "L1 (lasso) — its diamond constraint has corners on the axes",
+      "L2 (ridge)",
+      "Both equally",
+      "Neither — only trees do feature selection"
+    ],
+    "w": "L2's circular constraint shrinks smoothly but almost never hits zero. L1's corners make sparsity geometric, not accidental."
+  },
+  {
+    "t": "biasvar",
+    "q": "Increasing λ (regularization strength) moves you toward…",
+    "o": [
+      "Higher bias, lower variance",
+      "Lower bias, higher variance",
+      "Both lower",
+      "Neither changes"
+    ],
+    "w": "Regularization deliberately buys bias to sell variance. The optimal λ sits at the bottom of the validation U-curve."
+  },
+  {
+    "t": "biasvar",
+    "q": "Adding more training data primarily helps when…",
+    "o": [
+      "The model is variance-dominated (overfitting)",
+      "The model is bias-dominated (underfitting)",
+      "Always equally",
+      "The features are unscaled"
+    ],
+    "w": "More rows tame a fit that's chasing noise. They cannot make a straight line bend — bias needs capacity or features."
+  },
+  {
+    "t": "biasvar",
+    "q": "In sklearn's LogisticRegression, the parameter C is…",
+    "o": [
+      "INVERSE regularization strength — small C means a strong penalty",
+      "The number of classes",
+      "Regularization strength directly",
+      "The intercept"
+    ],
+    "w": "C = 1/λ. Cranking C to 100 nearly removes the penalty. A classic hands-on gotcha that separates users from readers."
+  },
+  {
+    "t": "biasvar",
+    "q": "Early stopping, dropout, L2, and shallower trees share what role?",
+    "o": [
+      "All are regularizers — trading a little bias for less variance",
+      "All speed up training",
+      "All improve calibration",
+      "All require scaled features"
+    ],
+    "w": "Different mechanisms, one trade. In an interview, naming the shared role before the differences shows structure."
+  },
+  {
+    "t": "metrics",
+    "q": "AUC = 0.5 means…",
+    "o": [
+      "The ranking is no better than random",
+      "The model is perfectly calibrated",
+      "Half the predictions are correct",
+      "The threshold is wrong"
+    ],
+    "w": "AUC is P(random positive outranks random negative); 0.5 is coin-flip ranking. It says nothing about calibration either way."
+  },
+  {
+    "t": "metrics",
+    "q": "Gini (scorecard convention) relates to AUC by…",
+    "o": [
+      "Gini = 2·AUC − 1",
+      "Gini = AUC²",
+      "Gini = 1 − AUC",
+      "They are unrelated"
+    ],
+    "w": "AUC 0.75 ⟺ Gini 0.50. Fintech reports Gini and KS; tech reports AUC — speak both dialects."
+  },
+  {
+    "t": "metrics",
+    "q": "The KS statistic is…",
+    "o": [
+      "The max gap between the two classes' cumulative score distributions — max(TPR − FPR)",
+      "The mean squared error of scores",
+      "The area under the PR curve",
+      "A calibration measure"
+    ],
+    "w": "The standard scorecard discrimination stat. Visually: the widest vertical daylight between the goods' and bads' CDFs."
+  },
+  {
+    "t": "metrics",
+    "q": "A model has AUC 0.95 but is useless for capital calculation because…",
+    "o": [
+      "Its probabilities are uncalibrated — ranking quality says nothing about PD levels",
+      "AUC is too high to be real",
+      "Capital uses accuracy",
+      "The threshold is unset"
+    ],
+    "w": "Discrimination and calibration are orthogonal. Capital is computed from PD LEVELS, so a perfect ranker with distorted levels fails validation."
+  },
+  {
+    "t": "metrics",
+    "q": "With 2% positives, the accuracy of always predicting negative is…",
+    "o": [
+      "98% — which is why accuracy lies under imbalance",
+      "50%",
+      "2%",
+      "Undefined"
+    ],
+    "w": "The do-nothing model looks excellent. This is the canonical argument for precision/recall and PR-AUC on rare events."
+  },
+  {
+    "t": "metrics",
+    "q": "AUC is invariant to…",
+    "o": [
+      "Any monotone transform of the scores",
+      "Class imbalance changes in the test set",
+      "Removing features",
+      "Recalibration changing the ranking"
+    ],
+    "w": "Only order matters to AUC. Logistic scores, their logits, or their ranks all give the identical AUC."
+  },
+  {
+    "t": "trees",
+    "q": "Gradient boosting fits each new tree to…",
+    "o": [
+      "The negative gradient of the loss w.r.t. current predictions",
+      "A bootstrap resample of the data",
+      "The raw labels again",
+      "The previous tree's leaves"
+    ],
+    "w": "Gradient descent in function space. For squared error the gradient IS the residual; for log-loss it's p − y."
+  },
+  {
+    "t": "trees",
+    "q": "Random forests mainly reduce ___; boosting mainly reduces ___:",
+    "o": [
+      "Variance; bias",
+      "Bias; variance",
+      "Both reduce bias",
+      "Both reduce variance"
+    ],
+    "w": "Averaging many deep, decorrelated trees cancels variance. Sequentially stacking weak learners attacks bias. One sentence, top-five question."
+  },
+  {
+    "t": "trees",
+    "q": "Feature scaling before XGBoost is…",
+    "o": [
+      "Unnecessary — splits depend only on feature ORDER",
+      "Mandatory",
+      "Needed only for categorical features",
+      "Needed when using early stopping"
+    ],
+    "w": "Monotone transforms leave every split decision unchanged. Scaling matters for gradient-fitted models (ch. 6), not trees."
+  },
+  {
+    "t": "trees",
+    "q": "XGBoost handles missing values by…",
+    "o": [
+      "Learning a default direction per split — no imputation needed",
+      "Dropping those rows",
+      "Mean imputation internally",
+      "Refusing to train"
+    ],
+    "w": "Each split routes missings to whichever child improved the loss during training. Mentioning this signals hands-on experience."
+  },
+  {
+    "t": "trees",
+    "q": "Lowering the learning rate (shrinkage) in GBM typically requires…",
+    "o": [
+      "More trees, and usually generalizes better",
+      "Fewer trees",
+      "Deeper trees",
+      "Feature scaling"
+    ],
+    "w": "Small ν + many trees is the robust recipe — tune the pair together with early stopping on a validation set."
+  },
+  {
+    "t": "trees",
+    "q": "A single, fully-grown decision tree typically suffers from…",
+    "o": [
+      "High variance — it memorizes the sample",
+      "High bias",
+      "Underfitting",
+      "Mis-calibrated splits"
+    ],
+    "w": "Deep trees fit noise; that's why forests average many of them and boosting keeps each one shallow."
+  },
+  {
+    "t": "testing",
+    "q": "A p-value is…",
+    "o": [
+      "P(data at least this extreme | the null is true)",
+      "P(the null is true | the data)",
+      "The probability the result replicates",
+      "The effect size"
+    ],
+    "w": "The inversion error is the single most common stats-round failure. The p-value conditions ON the null, never on it being true."
+  },
+  {
+    "t": "testing",
+    "q": "Repeatedly checking an A/B test and stopping at first significance…",
+    "o": [
+      "Inflates the false-positive rate",
+      "Is fine if n is large",
+      "Reduces power only",
+      "Makes the test conservative"
+    ],
+    "w": "Each peek is another lottery ticket against a true null. Fix the horizon in advance or use sequential corrections."
+  },
+  {
+    "t": "testing",
+    "q": "Statistical power is…",
+    "o": [
+      "P(rejecting the null | an effect of a given size truly exists)",
+      "1 − p-value",
+      "The significance level",
+      "The sample size"
+    ],
+    "w": "Power drives sample-size planning before launch. Underpowered tests mostly produce unreproducible noise."
+  },
+  {
+    "t": "testing",
+    "q": "A 95% CI for a difference contains 0. This means…",
+    "o": [
+      "Not significant at the 5% level (two-sided) — CI/test duality",
+      "The effect is exactly zero",
+      "The test was underpowered for sure",
+      "Significance at 10% is impossible"
+    ],
+    "w": "Confidence intervals and tests are two views of one machine. Absence of evidence ≠ evidence of absence, though."
+  },
+  {
+    "t": "testing",
+    "q": "The bootstrap estimates a statistic's uncertainty by…",
+    "o": [
+      "Resampling your sample with replacement and recomputing the statistic many times",
+      "Assuming normality",
+      "Collecting more data",
+      "Permuting the labels"
+    ],
+    "w": "When no SE formula exists — for a Gini, a KS, a ratio — the bootstrap manufactures one. Σ-as-a-loop applied to inference."
+  },
+  {
+    "t": "testing",
+    "q": "At n = 10 million per arm, a 0.01% lift comes back significant. You should…",
+    "o": [
+      "Check practical significance — huge n makes worthless effects 'significant'",
+      "Ship it — significance is significance",
+      "Increase alpha",
+      "Rerun the test"
+    ],
+    "w": "Statistical and practical significance diverge at scale. State the minimum effect worth acting on before launching."
+  },
+  {
+    "t": "design",
+    "q": "Your first move in an ML system design interview:",
+    "o": [
+      "Clarify the objective, cost asymmetry, latency, and constraints — before any modeling",
+      "Name the model architecture",
+      "Draw the serving infrastructure",
+      "List the features"
+    ],
+    "w": "Five minutes of scoping is graded higher than any architecture. The 30-second opener in chapter 15 is built for this."
+  },
+  {
+    "t": "design",
+    "q": "Defining a default label properly requires…",
+    "o": [
+      "A maturity window — e.g. 90+DPD within 12 months — and excluding immature accounts",
+      "Using whatever flag is in the table",
+      "Labeling at application time",
+      "Only fully repaid loans"
+    ],
+    "w": "Recent originations haven't had time to default; including them biases the rate down. Label maturity is the design-round depth check."
+  },
+  {
+    "t": "design",
+    "q": "Temporal (out-of-time) validation exists because…",
+    "o": [
+      "Random splits leak the future, and production always faces drifted data",
+      "It's faster than k-fold",
+      "Regulators require exactly one split",
+      "It increases training data"
+    ],
+    "w": "You will score tomorrow's loans with yesterday's model. Your vintage-split instinct from CCAR is exactly this — say it."
+  },
+  {
+    "t": "design",
+    "q": "Shadow mode / champion–challenger means…",
+    "o": [
+      "The new model scores live traffic silently alongside production before any decisions switch",
+      "Two models vote on each case",
+      "A/B testing on customers immediately",
+      "Keeping a backup server"
+    ],
+    "w": "It de-risks cutover: you compare distributions and would-be decisions on real traffic with zero customer impact."
+  },
+  {
+    "t": "design",
+    "q": "After deployment, the EARLIEST drift signal is usually…",
+    "o": [
+      "Input/score distribution shift (PSI) — because labels arrive with delay",
+      "AUC degradation",
+      "Rising default rates",
+      "Customer complaints"
+    ],
+    "w": "Default labels mature in months; fraud confirms in weeks. Input and score PSI move first — monitor them, not just performance."
+  },
+  {
+    "t": "design",
+    "q": "Adverse action requirements in credit demand…",
+    "o": [
+      "Per-decision explainability — reason codes, e.g. SHAP-derived top factors",
+      "Maximum possible AUC",
+      "Deep learning models",
+      "Monthly retraining"
+    ],
+    "w": "A declined applicant must be told why. This constrains model choice and is the governance layer most AS candidates have never touched — your edge."
+  },
+  {
+    "t": "deep",
+    "q": "Multi-head attention beats single-head primarily because…",
+    "o": [
+      "Heads specialize emergently on different relation types, in parallel subspaces",
+      "It uses fewer parameters",
+      "It removes the need for softmax",
+      "It is faster to compute"
+    ],
+    "w": "Each head gets its own Q/K/V projection into a d/h subspace; trained heads end up tracking different dependencies — something one head provably can't."
+  },
+  {
+    "t": "deep",
+    "q": "A transformer without positional encoding is…",
+    "o": [
+      "Permutation-invariant — blind to word order",
+      "Unable to train",
+      "Equivalent to an RNN",
+      "Faster but less accurate"
+    ],
+    "w": "Attention is a weighted average with no notion of position. You ADD a position signal (sinusoidal, learned, or rotary/RoPE) to restore order."
+  },
+  {
+    "t": "deep",
+    "q": "Residual connections x + F(x) help because…",
+    "o": [
+      "The identity path has derivative 1, so gradients survive arbitrary depth",
+      "They add regularization",
+      "They reduce parameters",
+      "They normalize activations"
+    ],
+    "w": "Each block learns a correction to identity; backprop flows through the + untouched. Without them, 100-layer nets don't train."
+  },
+  {
+    "t": "deep",
+    "q": "BERT's masked language modeling trains the model to…",
+    "o": [
+      "Predict hidden tokens from bidirectional context — a self-supervised task",
+      "Classify sentiment",
+      "Translate between languages",
+      "Rank documents"
+    ],
+    "w": "Hide ~15% of tokens, predict them. Labels come free from the data itself — that's what lets pretraining use billions of examples."
+  },
+  {
+    "t": "deep",
+    "q": "LoRA makes finetuning cheap by…",
+    "o": [
+      "Freezing the model and training small low-rank adapter matrices (<1% of params)",
+      "Quantizing all weights to 1-bit",
+      "Pruning half the layers",
+      "Using a smaller learning rate"
+    ],
+    "w": "ΔW = BA with B, A low-rank. Weight updates are empirically low-rank, so the adapters recover near-full-finetune quality for a fraction of the cost."
+  },
+  {
+    "t": "deep",
+    "q": "RAG (retrieval-augmented generation) primarily addresses…",
+    "o": [
+      "Stale knowledge and hallucination — retrieve documents and condition on them at inference",
+      "Slow training",
+      "Vanishing gradients",
+      "Class imbalance"
+    ],
+    "w": "Instead of baking facts into weights, fetch relevant docs per query and ground the generation. Adds a dependency on retrieval quality."
+  },
+  {
+    "t": "deep",
+    "q": "RLHF aligns an LLM by…",
+    "o": [
+      "Training a reward model on human preference rankings, then optimizing the policy against it",
+      "Supervised finetuning alone",
+      "Increasing model size",
+      "Masking more tokens"
+    ],
+    "w": "Humans rank outputs → reward model → optimize the LLM (PPO, or DPO which skips the separate RL step). Alignment, not capability."
+  },
+  {
+    "t": "research",
+    "q": "The Research Scientist (vs Applied) framing of attention is…",
+    "o": [
+      "What problem RNNs couldn't solve — sequential bottleneck and long-range forgetting",
+      "How the softmax is computed",
+      "Which library implements it",
+      "Its memory complexity alone"
+    ],
+    "w": "RS answers WHY a method exists and what it cost (O(n²)); AS answers how it works. Lineage — problem, idea, tradeoff, next — is the RS tell."
+  },
+  {
+    "t": "research",
+    "q": "The strongest reviewer critique of a paper claiming a gain is usually…",
+    "o": [
+      "Was the baseline tuned as hard as the proposed method?",
+      "Is the writing clear?",
+      "Are there enough citations?",
+      "Is the math notation standard?"
+    ],
+    "w": "Weakened baselines flatter new methods. After that: does the ablation isolate the claimed mechanism, and is the gain outside noise?"
+  },
+  {
+    "t": "testing",
+    "q": "An ablation study exists to…",
+    "o": [
+      "Isolate which component caused the gain by removing one at a time",
+      "Increase the dataset size",
+      "Speed up training",
+      "Replace cross-validation"
+    ],
+    "w": "Was it the conditioning or just the extra parameters? Ablate FiLM but keep the param count. A result without ablations is a correlation."
+  },
+  {
+    "t": "testing",
+    "q": "Causal effect (ATE) differs from correlation because…",
+    "o": [
+      "It compares the do(treat) world to the do(control) world — intervention, not observation",
+      "It uses more data",
+      "It is always larger",
+      "It requires deep learning"
+    ],
+    "w": "You never see both worlds for one unit. Randomization makes treatment independent of confounders; propensity/DiD/IV approximate that when you can't randomize."
+  },
+  {
+    "t": "testing",
+    "q": "Difference-in-Differences relies on which assumption?",
+    "o": [
+      "Parallel trends — treated and control would have moved together absent treatment",
+      "Normal residuals",
+      "Equal variance",
+      "Large sample size"
+    ],
+    "w": "DiD cancels fixed differences by comparing CHANGES around the intervention. The whole method stands or falls on parallel trends — state it."
+  },
+  {
+    "t": "trees",
+    "q": "Gini IMPURITY (in CART) and the Gini COEFFICIENT (from AUC) are…",
+    "o": [
+      "Different concepts that share a name",
+      "The same quantity",
+      "Always equal for balanced data",
+      "Both calibration metrics"
+    ],
+    "w": "Impurity = 1−Σpₖ² measures node purity for splits; the coefficient = 2·AUC−1 measures ranking. Interviewers test this exact confusion."
+  },
+  {
+    "t": "testing",
+    "q": "To test whether two models' AUCs differ significantly on the same test set, the standard tool is…",
+    "o": [
+      "DeLong's test — a paired test on the same cases",
+      "An independent two-sample t-test",
+      "Chi-squared",
+      "A new train/test split"
+    ],
+    "w": "The two AUCs are computed on the SAME examples, so the comparison is paired. DeLong gives the significance; a bootstrap gives a CI on the difference."
+  },
+  {
+    "t": "testing",
+    "q": "Concept shift (vs covariate shift) means…",
+    "o": [
+      "The relationship P(y|x) itself changed — e.g. 2020 forbearance broke delinquency→default",
+      "The input distribution P(x) moved",
+      "The class balance P(y) moved",
+      "The model overfit"
+    ],
+    "w": "Covariate shift (P(x)) is caught by PSI; label shift moves P(y); concept shift breaks the mapping itself and silently invalidates the model even if inputs look normal."
+  },
+  {
+    "t": "deep",
+    "q": "Pre-norm transformers (norm before each sublayer) are preferred over post-norm because…",
+    "o": [
+      "They keep a clean identity path and train deep stacks stably without delicate LR warmup",
+      "They use fewer parameters",
+      "They remove the need for residuals",
+      "They are required for attention to work"
+    ],
+    "w": "Post-norm (the original) puts LayerNorm after the residual add and needs careful warmup. Pre-norm keeps gradients flowing through the identity — why modern LLMs stack dozens of layers."
+  },
+  {
+    "t": "metrics",
+    "q": "A credit scorecard trained only on APPROVED loans suffers from…",
+    "o": [
+      "Selection bias — reject inference is needed to generalize to all applicants",
+      "Class imbalance only",
+      "Label leakage",
+      "Overfitting only"
+    ],
+    "w": "Rejects have no outcome label, so the training set is a censored, non-random slice. Reject inference estimates reject performance to correct toward the through-the-door population."
+  }
+]
