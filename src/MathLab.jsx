@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+﻿import React, { useState, useMemo, useEffect } from "react";
 import { storage, auth } from "./storage";
 import TOPICS from "./content/topics.json";
 import QUESTIONS from "./content/questions.json";
@@ -9,12 +9,12 @@ import QUESTIONS from "./content/questions.json";
 // picture. Tap a symbol and all three light up in the same color.
 // ---------------------------------------------------------------
 
-const BG = "#0a0d13", PANEL = "#11161f", PANEL2 = "#151b27", INK = "#e9edf6",
-  DIM = "#8b94a7", LINE = "#222a3a";
-const AMBER = "#f5b042", CYAN = "#34d6f2", VIOLET = "#b194fa", GREEN = "#55e08a",
-  ROSE = "#fb7185", BLUE = "#6aa5fa";
-const MATH = { fontFamily: "Georgia, 'Times New Roman', serif" };
-const MONO = { fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" };
+const BG = "#0D1412", PANEL = "#111C19", PANEL2 = "#16221F", INK = "#E9E6DE",
+  DIM = "#8C968F", LINE = "#29332f";
+const AMBER = "#C6A15E", CYAN = "#6CA0A6", VIOLET = "#A893C7", GREEN = "#7BAE86",
+  ROSE = "#C98896", BLUE = "#78A6B0";
+const MATH = { fontFamily: "'Fraunces', Georgia, serif" };
+const MONO = { fontFamily: "'IBM Plex Mono', ui-monospace, monospace" };
 
 function useActive() {
   const [pin, setPin] = useState(null);
@@ -69,8 +69,8 @@ function EqLine({ tokens, palette, A, size = 26 }) {
 
 function CodeLine({ tokens, palette, A }) {
   return (
-    <div style={{ ...MONO, fontSize: 13.5, background: "#0c1018", border: `1px solid ${LINE}`, borderRadius: 8, padding: "9px 12px", overflowX: "auto", whiteSpace: "nowrap" }}>
-      <span style={{ color: "#56627a" }}>{"# python   "}</span>
+    <div style={{ ...MONO, fontSize: 13.5, background: "#0f1916", border: `1px solid ${LINE}`, borderRadius: 8, padding: "9px 12px", overflowX: "auto", whiteSpace: "nowrap" }}>
+      <span style={{ color: "#8C968F" }}>{"# python   "}</span>
       {tokens.map((t, i) =>
         t.part ? (
           <span
@@ -86,7 +86,7 @@ function CodeLine({ tokens, palette, A }) {
             {t.t}
           </span>
         ) : (
-          <span key={i} style={{ color: "#aeb7c8" }}>{t.t}</span>
+          <span key={i} style={{ color: "#aab1ab" }}>{t.t}</span>
         )
       )}
     </div>
@@ -101,7 +101,7 @@ function Explain({ A, parts, palette, fallback }) {
       style={{
         minHeight: 56, background: PANEL2,
         border: `1px solid ${has ? palette[k] + "55" : LINE}`,
-        borderLeft: `3px solid ${has ? palette[k] : "#39435a"}`,
+        borderLeft: `3px solid ${has ? palette[k] : "#394640"}`,
         borderRadius: 8, padding: "10px 12px", fontSize: 13.5,
         color: has ? INK : DIM, lineHeight: 1.55, transition: "border-color .2s",
       }}
@@ -140,7 +140,7 @@ function Section({ title, why, children }) {
     <div style={{ background: PANEL, border: `1px solid ${LINE}`, borderRadius: 14, padding: "16px 14px", display: "flex", flexDirection: "column", gap: 13 }}>
       <div>
         <div style={{ fontSize: 17, fontWeight: 700, color: INK }}>{title}</div>
-        <div style={{ fontSize: 12, color: "#c9a45f", marginTop: 3, lineHeight: 1.5 }}>
+        <div style={{ fontSize: 12, color: AMBER, marginTop: 3, lineHeight: 1.5 }}>
           <span style={{ textTransform: "uppercase", letterSpacing: 1, fontSize: 10 }}>why you care · </span>
           {why}
         </div>
@@ -360,7 +360,7 @@ function SoftmaxModule() {
         {ps.map((p, i) => (
           <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <span style={{ ...MONO, width: 62, fontSize: 12, color: BLUE }}>z{i + 1} = {z[i].toFixed(1)}</span>
-            <div style={{ flex: 1, height: 20, background: "#0c1018", borderRadius: 6, overflow: "hidden", border: `1px solid ${LINE}` }}>
+            <div style={{ flex: 1, height: 20, background: "#1b2824", borderRadius: 6, overflow: "hidden", border: `1px solid ${LINE}` }}>
               <div style={{ width: `${p * 100}%`, height: "100%", background: GREEN + "cc", transition: "width .25s" }} />
             </div>
             <span style={{ ...MONO, width: 52, textAlign: "right", fontSize: 12, color: GREEN }}>{(p * 100).toFixed(1)}%</span>
@@ -409,7 +409,7 @@ function AttentionModule() {
       {ATT_TOKENS.map((t, i) => (
         <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span style={{ ...MONO, width: 70, fontSize: 11.5, color: DIM }}>{t}</span>
-          <div style={{ flex: 1, height: 14, background: "#0c1018", borderRadius: 5, overflow: "hidden", border: `1px solid ${LINE}` }}>
+          <div style={{ flex: 1, height: 14, background: "#1b2824", borderRadius: 5, overflow: "hidden", border: `1px solid ${LINE}` }}>
             <div style={{ width: `${wts[i] * 100}%`, height: "100%", background: color, transition: "width .25s" }} />
           </div>
           <span style={{ ...MONO, width: 42, textAlign: "right", fontSize: 11, color }}>{(wts[i] * 100).toFixed(0)}%</span>
@@ -451,7 +451,7 @@ function AttentionModule() {
                 onClick={() => setQi(r)}
                 style={{
                   ...MONO, fontSize: 11, padding: "8px 4px", cursor: "pointer", borderRadius: 6,
-                  color: r === qi ? "#0a0d13" : BLUE, textAlign: "center",
+                  color: r === qi ? "#0D1412" : BLUE, textAlign: "center",
                   background: r === qi ? BLUE : "transparent", border: `1px solid ${r === qi ? BLUE : LINE}`,
                   fontWeight: r === qi ? 700 : 400, transition: "all .15s",
                 }}
@@ -524,7 +524,7 @@ function GDModule() {
       onClick={fn}
       style={{
         ...MONO, fontSize: 13, padding: "9px 16px", borderRadius: 8, cursor: "pointer",
-        background: primary ? BLUE : "transparent", color: primary ? "#0a0d13" : INK,
+        background: primary ? BLUE : "transparent", color: primary ? "#0D1412" : INK,
         border: `1px solid ${primary ? BLUE : "#39435a"}`, fontWeight: 600,
       }}
     >
@@ -562,7 +562,7 @@ function GDModule() {
                 x2={px(th) + Math.sign(gdG(th)) * 34} y2={py(gdL(th)) + Math.abs(gdG(th)) * 6}
                 stroke={AMBER} strokeWidth="2.5" markerEnd="" />
             )}
-            <circle cx={px(th)} cy={py(gdL(th))} r={7} fill={BLUE} stroke="#dfe9ff" strokeWidth="1.5" />
+            <circle cx={px(th)} cy={py(gdL(th))} r={7} fill={BLUE} stroke="#1b302e" strokeWidth="1.5" />
           </g>
         )}
         <text x={W - R} y={H - 7} fill={DIM} fontSize="10" textAnchor="end">θ →</text>
@@ -709,7 +709,7 @@ function FilmModule() {
               onClick={() => { setG(p.g); setB(p.b); }}
               style={{
                 ...MONO, fontSize: 12, padding: "8px 12px", borderRadius: 8, cursor: "pointer",
-                background: on ? GREEN : "transparent", color: on ? "#0a0d13" : GREEN,
+                background: on ? GREEN : "transparent", color: on ? "#0D1412" : GREEN,
                 border: `1px solid ${GREEN}66`, fontWeight: on ? 700 : 400,
               }}
             >
@@ -796,7 +796,7 @@ function LogLikModule() {
             onClick={() => setY(v)}
             style={{
               ...MONO, fontSize: 12.5, padding: "8px 14px", borderRadius: 8, cursor: "pointer",
-              background: y === v ? AMBER : "transparent", color: y === v ? "#0a0d13" : AMBER,
+              background: y === v ? AMBER : "transparent", color: y === v ? "#0D1412" : AMBER,
               border: `1px solid ${AMBER}66`, fontWeight: y === v ? 700 : 400,
             }}
           >
@@ -870,7 +870,7 @@ function KLModule() {
         <div style={{ ...MONO, fontSize: 13 }}>
           <span style={{ color: DIM }}>KL(Q‖P) = </span>
           <span style={{ color: "#c98896", fontWeight: 700 }}>{klRev.toFixed(3)}</span>
-          <span style={{ color: "#56627a", fontSize: 11 }}>  ← different: not symmetric</span>
+          <span style={{ color: "#69746e", fontSize: 11 }}>  ← different: not symmetric</span>
         </div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -878,10 +878,10 @@ function KLModule() {
           <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <span style={{ ...MONO, width: 56, fontSize: 11, color: DIM }}>bucket {i + 1}</span>
             <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2 }}>
-              <div style={{ height: 11, background: "#0c1018", borderRadius: 4, overflow: "hidden", border: `1px solid ${LINE}` }}>
+              <div style={{ height: 11, background: "#1b2824", borderRadius: 4, overflow: "hidden", border: `1px solid ${LINE}` }}>
                 <div style={{ width: `${pv * 100}%`, height: "100%", background: BLUE + "cc" }} />
               </div>
-              <div style={{ height: 11, background: "#0c1018", borderRadius: 4, overflow: "hidden", border: `1px solid ${LINE}` }}>
+              <div style={{ height: 11, background: "#1b2824", borderRadius: 4, overflow: "hidden", border: `1px solid ${LINE}` }}>
                 <div style={{ width: `${Q[i] * 100}%`, height: "100%", background: AMBER + "cc", transition: "width .2s" }} />
               </div>
             </div>
@@ -1061,8 +1061,8 @@ function QuizModule() {
               ...MONO, fontSize: 11, padding: "6px 10px", borderRadius: 999, whiteSpace: "nowrap",
               cursor: "pointer", flexShrink: 0,
               background: topic === t ? AMBER : "transparent",
-              color: topic === t ? "#0a0d13" : DIM,
-              border: `1px solid ${topic === t ? AMBER : "#2c3548"}`,
+              color: topic === t ? "#0D1412" : DIM,
+              border: `1px solid ${topic === t ? AMBER : "#34413b"}`,
               fontWeight: topic === t ? 700 : 400,
             }}
           >
@@ -1082,7 +1082,7 @@ function QuizModule() {
       <div style={{ fontSize: 16, fontWeight: 600, color: INK, lineHeight: 1.5 }}>{q.q}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {q.opts.map((opt, i) => {
-          let bg = "transparent", bd = "#2c3548", col = INK;
+          let bg = "transparent", bd = "#34413b", col = INK;
           if (sel !== null) {
             if (i === q.correct) { bg = GREEN + "22"; bd = GREEN; col = GREEN; }
             else if (i === sel) { bg = ROSE + "22"; bd = ROSE; col = ROSE; }
@@ -1122,7 +1122,7 @@ function QuizModule() {
           onClick={next}
           style={{
             ...MONO, fontSize: 14, padding: "11px 0", borderRadius: 9, cursor: "pointer",
-            background: BLUE, color: "#0a0d13", border: "none", fontWeight: 700, width: "100%",
+            background: BLUE, color: "#0D1412", border: "none", fontWeight: 700, width: "100%",
           }}
         >
           next →
@@ -1440,7 +1440,7 @@ function MultiHeadModule() {
           <button key={i} onClick={() => setHead(i)}
             style={{
               ...MONO, fontSize: 11, padding: "7px 10px", borderRadius: 8, cursor: "pointer", flexShrink: 0,
-              background: head === i ? VIOLET : "transparent", color: head === i ? "#0a0d13" : VIOLET,
+              background: head === i ? VIOLET : "transparent", color: head === i ? "#0D1412" : VIOLET,
               border: `1px solid ${VIOLET}66`, fontWeight: head === i ? 700 : 400,
             }}>
             head {i + 1}: {p.name}
@@ -1458,7 +1458,7 @@ function MultiHeadModule() {
               <div onClick={() => setQi(r)}
                 style={{
                   ...MONO, fontSize: 10, padding: "6px 3px", cursor: "pointer", borderRadius: 5,
-                  color: r === qi ? "#0a0d13" : BLUE, textAlign: "center",
+                  color: r === qi ? "#0D1412" : BLUE, textAlign: "center",
                   background: r === qi ? BLUE : "transparent", border: `1px solid ${r === qi ? BLUE : LINE}`,
                 }}>
                 {t}
@@ -1482,14 +1482,14 @@ function MultiHeadModule() {
         {MHA_TOKENS.map((t, i) => (
           <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
             <span style={{ ...MONO, width: 56, fontSize: 11, color: DIM }}>{t}</span>
-            <div style={{ flex: 1, height: 14, background: "#0c1018", borderRadius: 5, overflow: "hidden", border: `1px solid ${LINE}` }}>
+            <div style={{ flex: 1, height: 14, background: "#1b2824", borderRadius: 5, overflow: "hidden", border: `1px solid ${LINE}` }}>
               <div style={{ width: `${row[i] * 100}%`, height: "100%", background: VIOLET + "cc", transition: "width .25s" }} />
             </div>
             <span style={{ ...MONO, width: 38, textAlign: "right", fontSize: 10.5, color: VIOLET }}>{(row[i] * 100).toFixed(0)}%</span>
           </div>
         ))}
       </div>
-      <div style={{ fontSize: 12, color: "#c3cbdb", lineHeight: 1.6, background: PANEL2, borderRadius: 8, padding: "10px 12px", border: `1px solid ${LINE}` }}>
+      <div style={{ fontSize: 12, color: "#b8bdb8", lineHeight: 1.6, background: PANEL2, borderRadius: 8, padding: "10px 12px", border: `1px solid ${LINE}` }}>
         Same sentence, same tokens — four heads, four completely different attention maps. No one told them to specialize; it emerged from training. That is the whole reason multi-head beats single-head.
       </div>
     </Section>
@@ -1545,7 +1545,7 @@ function CalibModule() {
           <button key={k} onClick={() => setView(k)}
             style={{
               ...MONO, fontSize: 11.5, padding: "7px 11px", borderRadius: 8, cursor: "pointer",
-              background: view === k ? CYAN : "transparent", color: view === k ? "#0a0d13" : CYAN,
+              background: view === k ? CYAN : "transparent", color: view === k ? "#0D1412" : CYAN,
               border: `1px solid ${CYAN}66`, fontWeight: view === k ? 700 : 400,
             }}>
             {lb}
@@ -1623,18 +1623,33 @@ function CalibModule() {
 // ---------------- 16. THEORY / CURRICULUM ----------------
 
 const CHAPTERS = TOPICS;  // loaded from content/topics.json (content-driven)
+const TRACKS = {
+  all: { label: "All chapters", chapters: CHAPTERS.map((c) => c.n) },
+  general: { label: "General Applied ML", chapters: [0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 20, 22, 24, 25] },
+  fintech: { label: "Fintech & Risk", chapters: [0, 2, 3, 4, 5, 7, 10, 11, 12, 13, 14, 15, 16, 20, 22, 23, 24, 25] },
+  llm: { label: "LLM Applied Scientist", chapters: [0, 1, 5, 6, 7, 8, 9, 10, 17, 18, 19, 20, 21, 24, 25] },
+  research: { label: "Research-heavy AS", chapters: [0, 1, 2, 3, 5, 6, 7, 8, 9, 10, 16, 17, 18, 19, 20, 21, 22, 25] },
+};
+
+function chapterStatus(c) {
+  const iv = c.interview || {};
+  const fullInterview = !!(iv.s30 && iv.m2 && iv.m5);
+  if (fullInterview && missingRequired(c).length === 0) return { label: "interview-ready", color: GREEN };
+  if (missingRequired(c).length === 0) return { label: "core-ready", color: BLUE };
+  return { label: "building", color: AMBER };
+}
 
 function Bk({ b, goTo }) {
   if (b.k === "h")
     return <div style={{ fontSize: 15, fontWeight: 700, color: INK, marginTop: 6 }}>{b.t}</div>;
   if (b.k === "p")
-    return <div style={{ fontSize: 13.5, color: "#c3cbdb", lineHeight: 1.7 }}>{b.t}</div>;
+    return <div style={{ fontSize: 13.5, color: "#b8bdb8", lineHeight: 1.7 }}>{b.t}</div>;
   if (b.k === "say")
     return (
       <div style={{ background: PANEL2, border: `1px solid ${AMBER}44`, borderLeft: `3px solid ${AMBER}`, borderRadius: 8, padding: "11px 13px" }}>
         <div style={{ ...MONO, fontSize: 10, letterSpacing: 1.5, color: AMBER, marginBottom: 6 }}>SAY IT ALOUD · INTERVIEW VOICE</div>
         <div style={{ ...MATH, fontStyle: "italic", fontSize: 17, color: INK, marginBottom: 7 }}>{b.f}</div>
-        <div style={{ fontSize: 13, color: "#c3cbdb", lineHeight: 1.65 }}>{b.t}</div>
+        <div style={{ fontSize: 13, color: "#b8bdb8", lineHeight: 1.65 }}>{b.t}</div>
       </div>
     );
   if (b.k === "key")
@@ -1642,7 +1657,7 @@ function Bk({ b, goTo }) {
       <div style={{ background: PANEL2, border: `1px solid ${CYAN}33`, borderLeft: `3px solid ${CYAN}`, borderRadius: 8, padding: "11px 13px" }}>
         <div style={{ ...MONO, fontSize: 10, letterSpacing: 1.5, color: CYAN, marginBottom: 6 }}>KEY FACTS</div>
         {b.items.map((it, i) => (
-          <div key={i} style={{ fontSize: 13, color: "#c3cbdb", lineHeight: 1.6, display: "flex", gap: 8, marginBottom: 4 }}>
+          <div key={i} style={{ fontSize: 13, color: "#b8bdb8", lineHeight: 1.6, display: "flex", gap: 8, marginBottom: 4 }}>
             <span style={{ color: CYAN }}>·</span>
             <span>{it}</span>
           </div>
@@ -1651,7 +1666,7 @@ function Bk({ b, goTo }) {
     );
   if (b.k === "code")
     return (
-      <pre style={{ ...MONO, fontSize: 11.5, background: "#0c1018", border: `1px solid ${LINE}`, borderRadius: 8, padding: "10px 12px", overflowX: "auto", color: "#aeb7c8", lineHeight: 1.6, margin: 0 }}>
+      <pre style={{ ...MONO, fontSize: 11.5, background: "#0f1916", border: `1px solid ${LINE}`, borderRadius: 8, padding: "10px 12px", overflowX: "auto", color: "#b8bdb8", lineHeight: 1.6, margin: 0 }}>
         {b.t}
       </pre>
     );
@@ -1661,7 +1676,7 @@ function Bk({ b, goTo }) {
         <div style={{ ...MONO, fontSize: 10, letterSpacing: 1.5, color: GREEN, marginBottom: 5 }}>LAB · TRY IT ON REAL DATA</div>
         <div style={{ fontSize: 12.5, color: GREEN, marginBottom: 7 }}>{b.data}</div>
         {b.steps.map((s, i) => (
-          <div key={i} style={{ fontSize: 13, color: "#c3cbdb", lineHeight: 1.6, display: "flex", gap: 8, marginBottom: 4 }}>
+          <div key={i} style={{ fontSize: 13, color: "#b8bdb8", lineHeight: 1.6, display: "flex", gap: 8, marginBottom: 4 }}>
             <span style={{ ...MONO, color: GREEN }}>{i + 1}.</span>
             <span>{s}</span>
           </div>
@@ -1711,32 +1726,32 @@ function SchemaSections({ c }) {
       {c.why && (
         <div style={{ background: PANEL2, border: `1px solid ${BLUE}33`, borderLeft: `3px solid ${BLUE}`, borderRadius: 8, padding: "11px 13px" }}>
           <div style={{ ...MONO, fontSize: 10, letterSpacing: 1.5, color: BLUE, marginBottom: 6 }}>WHY DOES THIS EXIST?</div>
-          <div style={{ fontSize: 13, color: "#c3cbdb", lineHeight: 1.65 }}>{c.why}</div>
+          <div style={{ fontSize: 13, color: "#b8bdb8", lineHeight: 1.65 }}>{c.why}</div>
         </div>
       )}
       {c.visualization && (
         <div style={{ background: PANEL2, border: `1px solid ${VIOLET}33`, borderLeft: `3px solid ${VIOLET}`, borderRadius: 8, padding: "11px 13px" }}>
           <div style={{ ...MONO, fontSize: 10, letterSpacing: 1.5, color: VIOLET, marginBottom: 6 }}>VISUALIZATION · THE MENTAL PICTURE</div>
-          <div style={{ fontSize: 13, color: "#c3cbdb", lineHeight: 1.65 }}>{c.visualization}</div>
+          <div style={{ fontSize: 13, color: "#b8bdb8", lineHeight: 1.65 }}>{c.visualization}</div>
         </div>
       )}
       {c.failure && (
         <div style={{ background: PANEL2, border: `1px solid ${ROSE}33`, borderLeft: `3px solid ${ROSE}`, borderRadius: 8, padding: "11px 13px" }}>
           <div style={{ ...MONO, fontSize: 10, letterSpacing: 1.5, color: ROSE, marginBottom: 6 }}>WHEN DOES IT FAIL?</div>
-          <div style={{ fontSize: 13, color: "#c3cbdb", lineHeight: 1.65 }}>{c.failure}</div>
+          <div style={{ fontSize: 13, color: "#b8bdb8", lineHeight: 1.65 }}>{c.failure}</div>
         </div>
       )}
       {cs && (
         <div style={{ background: PANEL2, border: `1px solid ${GREEN}33`, borderLeft: `3px solid ${GREEN}`, borderRadius: 8, padding: "11px 13px" }}>
           <div style={{ ...MONO, fontSize: 10, letterSpacing: 1.5, color: GREEN, marginBottom: 6 }}>CASE STUDY · {(cs.title || "").toUpperCase()}</div>
-          <div style={{ fontSize: 13, color: "#c3cbdb", lineHeight: 1.65 }}>{cs.body}</div>
+          <div style={{ fontSize: 13, color: "#b8bdb8", lineHeight: 1.65 }}>{cs.body}</div>
         </div>
       )}
       {rw && (
         <div style={{ background: PANEL2, border: `1px solid ${CYAN}33`, borderLeft: `3px solid ${CYAN}`, borderRadius: 8, padding: "11px 13px" }}>
           <div style={{ ...MONO, fontSize: 10, letterSpacing: 1.5, color: CYAN, marginBottom: 6 }}>REAL-WORLD</div>
           {rw.map((x, i) => (
-            <div key={i} style={{ fontSize: 13, color: "#c3cbdb", lineHeight: 1.6, display: "flex", gap: 8, marginBottom: 4 }}>
+            <div key={i} style={{ fontSize: 13, color: "#b8bdb8", lineHeight: 1.6, display: "flex", gap: 8, marginBottom: 4 }}>
               <span style={{ color: CYAN }}>·</span><span>{x}</span>
             </div>
           ))}
@@ -1749,7 +1764,7 @@ function SchemaSections({ c }) {
             v ? (
               <div key={k} style={{ marginBottom: 9 }}>
                 <span style={{ ...MONO, fontSize: 11, color: AMBER, fontWeight: 700 }}>{k} — </span>
-                <span style={{ fontSize: 13, color: "#c3cbdb", lineHeight: 1.6 }}>{v}</span>
+                <span style={{ fontSize: 13, color: "#b8bdb8", lineHeight: 1.6 }}>{v}</span>
               </div>
             ) : null
           )}
@@ -1759,7 +1774,7 @@ function SchemaSections({ c }) {
         <div style={{ background: PANEL2, border: `1px solid ${VIOLET}33`, borderLeft: `3px solid ${VIOLET}`, borderRadius: 8, padding: "11px 13px" }}>
           <div style={{ ...MONO, fontSize: 10, letterSpacing: 1.5, color: VIOLET, marginBottom: 6 }}>SHARPEN MY THINKING · no answers — reason it out</div>
           {c.sharpen.map((q, i) => (
-            <div key={i} style={{ fontSize: 13, color: "#c3cbdb", lineHeight: 1.6, display: "flex", gap: 8, marginBottom: 5 }}>
+            <div key={i} style={{ fontSize: 13, color: "#b8bdb8", lineHeight: 1.6, display: "flex", gap: 8, marginBottom: 5 }}>
               <span style={{ color: VIOLET }}>?</span>
               <span>{q}</span>
             </div>
@@ -1767,7 +1782,7 @@ function SchemaSections({ c }) {
         </div>
       ) : null}
       {missing.length > 0 && (
-        <div style={{ ...MONO, fontSize: 11, color: "#6b7488", border: `1px dashed #39435a`, borderRadius: 8, padding: "8px 11px" }}>
+        <div style={{ ...MONO, fontSize: 11, color: "#69746e", border: `1px dashed #39435a`, borderRadius: 8, padding: "8px 11px" }}>
           to-expand · required sections not yet written: {missing.join(", ")}
         </div>
       )}
@@ -1776,16 +1791,52 @@ function SchemaSections({ c }) {
 }
 
 function TheoryModule({ goTo, chap, setChap, done, setDone }) {
+  const [track, setTrack] = useState("all");
+  const [query, setQuery] = useState("");
   if (chap === null || chap === undefined) {
-    const doneCount = CHAPTERS.filter((_, i) => done[i]).length;
-    const pct = Math.round((doneCount / CHAPTERS.length) * 100);
+    const trackChapters = TRACKS[track].chapters;
+    const visible = CHAPTERS.filter((c) =>
+      trackChapters.includes(c.n) &&
+      `${c.title} ${c.tag} ${c.why || ""}`.toLowerCase().includes(query.trim().toLowerCase())
+    );
+    const doneCount = trackChapters.filter((n) => done[n]).length;
+    const pct = Math.round((doneCount / trackChapters.length) * 100);
+    const interviewReady = trackChapters.filter((n) => chapterStatus(CHAPTERS[n]).label === "interview-ready").length;
+    const labCount = trackChapters.filter((n) => CHAPTERS[n].blocks.some((b) => b.k === "lab")).length;
     return (
-      <Section title="The Curriculum" why="read in order, top to bottom. Each chapter ends in an interactive tab and a real-data lab. This is the spine; the tabs are the muscles.">
+      <Section title="Your Applied ML Roadmap" why="choose a target role, find weak spots, and practice the chapters that move your interview readiness.">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
+          {[
+            ["track progress", `${doneCount}/${trackChapters.length}`, GREEN],
+            ["interview-ready", `${interviewReady}/${trackChapters.length}`, BLUE],
+            ["hands-on labs", `${labCount}`, VIOLET],
+          ].map(([label, value, color]) => (
+            <div key={label} style={{ background: PANEL2, border: `1px solid ${LINE}`, borderRadius: 10, padding: "11px 10px" }}>
+              <div style={{ ...MONO, color, fontSize: 18, fontWeight: 800 }}>{value}</div>
+              <div style={{ ...MONO, color: DIM, fontSize: 9.5, marginTop: 3, textTransform: "uppercase", letterSpacing: .7 }}>{label}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
+          {Object.entries(TRACKS).map(([id, item]) => (
+            <button key={id} onClick={() => setTrack(id)} style={{
+              ...MONO, fontSize: 11, borderRadius: 999, padding: "7px 10px", cursor: "pointer",
+              background: track === id ? BLUE : PANEL2, color: track === id ? "#0D1412" : DIM,
+              border: `1px solid ${track === id ? BLUE : LINE}`, fontWeight: track === id ? 700 : 500,
+            }}>{item.label}</button>
+          ))}
+        </div>
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search chapters, concepts, or interview topics..."
+          style={{ width: "100%", padding: "10px 12px", borderRadius: 9, border: `1px solid ${LINE}`, background: "#0D1412", color: INK, fontSize: 13, outlineColor: BLUE }}
+        />
         <div style={{ background: PANEL2, border: `1px solid ${LINE}`, borderRadius: 10, padding: "11px 13px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 7 }}>
             <span style={{ ...MONO, fontSize: 12, color: DIM }}>
-              progress · <span style={{ color: GREEN }}>{doneCount}</span>/{CHAPTERS.length} chapters
-              <span style={{ color: "#56627a" }}> · saved across sessions</span>
+              {TRACKS[track].label} · <span style={{ color: GREEN }}>{doneCount}</span>/{trackChapters.length} chapters
+              <span style={{ color: "#8C968F" }}> · saved across sessions</span>
             </span>
             {doneCount > 0 && (
               <button
@@ -1796,11 +1847,14 @@ function TheoryModule({ goTo, chap, setChap, done, setDone }) {
               </button>
             )}
           </div>
-          <div style={{ height: 7, background: "#0c1018", borderRadius: 4, overflow: "hidden", border: `1px solid ${LINE}` }}>
+          <div style={{ height: 7, background: "#1b2824", borderRadius: 4, overflow: "hidden", border: `1px solid ${LINE}` }}>
             <div style={{ width: `${pct}%`, height: "100%", background: GREEN, transition: "width .3s" }} />
           </div>
         </div>
-        {CHAPTERS.map((c, i) => (
+        {visible.map((c) => {
+          const i = c.n;
+          const status = chapterStatus(c);
+          return (
           <button
             key={i}
             onClick={() => setChap(i)}
@@ -1810,21 +1864,19 @@ function TheoryModule({ goTo, chap, setChap, done, setDone }) {
               borderRadius: 10, padding: "12px 13px", cursor: "pointer",
             }}
           >
-            <span style={{ ...MONO, fontSize: 15, color: done[i] ? GREEN : "#56627a", width: 26, flexShrink: 0, fontWeight: 700 }}>
+            <span style={{ ...MONO, fontSize: 15, color: done[i] ? GREEN : "#8C968F", width: 26, flexShrink: 0, fontWeight: 700 }}>
               {done[i] ? "✓" : String(c.n).padStart(2, "0")}
             </span>
             <span style={{ flex: 1 }}>
               <span style={{ display: "block", fontSize: 14.5, fontWeight: 600, color: INK }}>{c.title}</span>
               <span style={{ display: "block", fontSize: 11.5, color: DIM, marginTop: 2 }}>{c.tag}</span>
             </span>
-            {missingRequired(c).length === 0 ? (
-              <span style={{ ...MONO, fontSize: 9, color: GREEN, border: `1px solid ${GREEN}55`, borderRadius: 5, padding: "2px 5px", flexShrink: 0 }}>complete</span>
-            ) : (c.why || c.failure || (c.interview && c.interview.m2) || (c.sharpen && c.sharpen.length) || c.caseStudy) ? (
-              <span style={{ ...MONO, fontSize: 9, color: AMBER, border: `1px solid ${AMBER}55`, borderRadius: 5, padding: "2px 5px", flexShrink: 0 }}>+deep</span>
-            ) : null}
-            <span style={{ color: "#56627a" }}>›</span>
+            <span style={{ ...MONO, fontSize: 9, color: status.color, border: `1px solid ${status.color}55`, borderRadius: 5, padding: "2px 5px", flexShrink: 0 }}>{status.label}</span>
+            <span style={{ color: "#8C968F" }}>›</span>
           </button>
-        ))}
+          );
+        })}
+        {visible.length === 0 && <div style={{ color: DIM, fontSize: 13, textAlign: "center", padding: 18 }}>No chapters match that search.</div>}
       </Section>
     );
   }
@@ -1844,17 +1896,91 @@ function TheoryModule({ goTo, chap, setChap, done, setDone }) {
       <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
         {chap > 0 && (
           <button onClick={() => setChap(chap - 1)}
-            style={{ ...MONO, fontSize: 13, padding: "10px 14px", borderRadius: 9, cursor: "pointer", background: "transparent", color: DIM, border: `1px solid #39435a`, flex: 1 }}>
+            style={{ ...MONO, fontSize: 13, padding: "10px 14px", borderRadius: 9, cursor: "pointer", background: "transparent", color: DIM, border: `1px solid #394640`, flex: 1 }}>
             ← prev
           </button>
         )}
         <button
           onClick={() => { setDone({ ...done, [chap]: true }); setChap(chap + 1 < CHAPTERS.length ? chap + 1 : null); }}
-          style={{ ...MONO, fontSize: 13, padding: "10px 14px", borderRadius: 9, cursor: "pointer", background: GREEN, color: "#0a0d13", border: "none", fontWeight: 700, flex: 2 }}
+          style={{ ...MONO, fontSize: 13, padding: "10px 14px", borderRadius: 9, cursor: "pointer", background: GREEN, color: "#0D1412", border: "none", fontWeight: 700, flex: 2 }}
         >
           {chap + 1 < CHAPTERS.length ? "done — next chapter →" : "done — back to contents"}
         </button>
       </div>
+    </Section>
+  );
+}
+
+// ---------------- OPEN-ENDED INTERVIEW PRACTICE ----------------
+
+const PRACTICE_PROMPTS = CHAPTERS.flatMap((c) =>
+  (c.sharpen || []).map((q) => ({
+    chapter: c.n,
+    title: c.title,
+    question: q,
+    coaching: c.interview?.m2 || c.failure || c.interview?.s30,
+  }))
+);
+
+function PracticeModule({ goTo, setChap }) {
+  const [track, setTrack] = useState("general");
+  const [index, setIndex] = useState(0);
+  const [answer, setAnswer] = useState("");
+  const [revealed, setRevealed] = useState(false);
+  const pool = PRACTICE_PROMPTS.filter((p) => TRACKS[track].chapters.includes(p.chapter));
+  const prompt = pool[index % pool.length];
+  const next = () => {
+    setIndex((i) => (i + 1) % pool.length);
+    setAnswer("");
+    setRevealed(false);
+  };
+  const changeTrack = (id) => {
+    setTrack(id);
+    setIndex(0);
+    setAnswer("");
+    setRevealed(false);
+  };
+  return (
+    <Section title="Open-Ended Interview Practice" why="multiple choice tests recognition; this mode makes you produce, structure, and defend an answer before seeing coaching.">
+      <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
+        {Object.entries(TRACKS).filter(([id]) => id !== "all").map(([id, item]) => (
+          <button key={id} onClick={() => changeTrack(id)} style={{
+            ...MONO, fontSize: 11, borderRadius: 999, padding: "7px 10px", cursor: "pointer",
+            background: track === id ? VIOLET : PANEL2, color: track === id ? "#0D1412" : DIM,
+            border: `1px solid ${track === id ? VIOLET : LINE}`,
+          }}>{item.label}</button>
+        ))}
+      </div>
+      <div style={{ background: PANEL2, border: `1px solid ${VIOLET}44`, borderLeft: `4px solid ${VIOLET}`, borderRadius: 10, padding: "14px 15px" }}>
+        <div style={{ ...MONO, color: VIOLET, fontSize: 10, letterSpacing: 1, marginBottom: 7 }}>
+          PROMPT {index % pool.length + 1}/{pool.length} · {prompt.title.toUpperCase()}
+        </div>
+        <div style={{ color: INK, fontSize: 16, lineHeight: 1.55, fontWeight: 650 }}>{prompt.question}</div>
+      </div>
+      <div style={{ ...MONO, fontSize: 10.5, color: DIM }}>Aim for: direct answer → mechanism → trade-off or failure mode → real example.</div>
+      <textarea
+        value={answer}
+        onChange={(e) => setAnswer(e.target.value)}
+        placeholder="Write the answer you would say aloud. No options, no hints."
+        rows={8}
+        style={{ width: "100%", resize: "vertical", padding: 12, borderRadius: 10, border: `1px solid ${LINE}`, background: "#0D1412", color: INK, fontSize: 13.5, lineHeight: 1.6, outlineColor: VIOLET, fontFamily: "inherit" }}
+      />
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <button onClick={() => setRevealed(true)} disabled={!answer.trim()} style={{
+          ...MONO, flex: 2, minWidth: 180, fontSize: 12, padding: "10px 12px", borderRadius: 9,
+          border: "none", cursor: answer.trim() ? "pointer" : "not-allowed", background: answer.trim() ? VIOLET : "#394640", color: "#0D1412", fontWeight: 700,
+        }}>reveal coaching after my attempt</button>
+        <button onClick={next} style={{ ...MONO, flex: 1, minWidth: 120, fontSize: 12, padding: "10px 12px", borderRadius: 9, border: `1px solid ${LINE}`, cursor: "pointer", background: PANEL2, color: DIM }}>skip / next →</button>
+      </div>
+      {revealed && (
+        <div style={{ background: "#142421", border: `1px solid ${BLUE}44`, borderLeft: `4px solid ${BLUE}`, borderRadius: 10, padding: "13px 14px" }}>
+          <div style={{ ...MONO, color: BLUE, fontSize: 10, letterSpacing: 1, marginBottom: 7 }}>COACHING GUIDE · compare structure, not wording</div>
+          <div style={{ color: "#b8bdb8", fontSize: 13.5, lineHeight: 1.65 }}>{prompt.coaching}</div>
+          <button onClick={() => { setChap(prompt.chapter); goTo("learn"); }} style={{ ...MONO, marginTop: 10, fontSize: 11, color: BLUE, background: "transparent", border: `1px solid ${BLUE}55`, borderRadius: 7, padding: "6px 9px", cursor: "pointer" }}>
+            review chapter →
+          </button>
+        </div>
+      )}
     </Section>
   );
 }
@@ -1877,6 +2003,7 @@ const TABS = [
   { id: "roc", label: "ROC·AUC", C: ROCModule },
   { id: "calib", label: "calib·PR", C: CalibModule },
   { id: "biasvar", label: "bias-var", C: BiasVarModule },
+  { id: "practice", label: "practice", C: PracticeModule },
   { id: "quiz", label: "⚡ quiz", C: QuizModule },
 ];
 
@@ -1919,17 +2046,17 @@ export default function App() {
   }, [done, loaded]);
   const Active = TABS.find((t) => t.id === tab).C;
   return (
-    <div style={{ background: BG, minHeight: "100vh", color: INK, fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif" }}>
-      <div style={{ maxWidth: 740, margin: "0 auto", padding: "18px 12px 40px", display: "flex", flexDirection: "column", gap: 14 }}>
+    <div style={{ background: BG, minHeight: "100vh", color: INK, fontFamily: "'Hanken Grotesk', system-ui, sans-serif" }}>
+      <div style={{ maxWidth: 860, margin: "0 auto", padding: "22px 14px 44px", display: "flex", flexDirection: "column", gap: 14 }}>
         <div>
-          <div style={{ ...MONO, fontSize: 11, letterSpacing: 3, color: "#56627a", textTransform: "uppercase" }}>
-            notation → code → picture
+          <div style={{ ...MONO, fontSize: 11, letterSpacing: 3, color: "#8C968F", textTransform: "uppercase" }}>
+            intuition → practice → interview readiness
           </div>
           <div style={{ ...MATH, fontSize: 30, fontWeight: 700, fontStyle: "italic", color: INK, marginTop: 2 }}>
             Math Intuition Lab
           </div>
           <div style={{ fontSize: 13, color: DIM, marginTop: 5, lineHeight: 1.55 }}>
-            One loop: <span style={{ color: CYAN }}>read a chapter</span> → <span style={{ color: VIOLET }}>play its tab</span> (tap any colored symbol — it lights up in the math, the Python, and the picture) → <span style={{ color: AMBER }}>drill the quiz</span> → run the lab on real data.
+            Choose a role track, build intuition with interactive chapters, then prove you can explain it in open-ended practice.
           </div>
           {auth.enabled && (
             <div style={{ marginTop: 9, display: "flex", alignItems: "center", gap: 9, flexWrap: "wrap" }}>
@@ -1940,17 +2067,17 @@ export default function App() {
                   </span>
                   <button
                     onClick={() => auth.signOutUser()}
-                    style={{ ...MONO, fontSize: 10.5, color: DIM, background: "transparent", border: `1px solid #39435a`, borderRadius: 6, padding: "3px 9px", cursor: "pointer" }}
+                    style={{ ...MONO, fontSize: 10.5, color: DIM, background: "transparent", border: `1px solid #394640`, borderRadius: 6, padding: "3px 9px", cursor: "pointer" }}
                   >
                     sign out
                   </button>
                 </>
               ) : (
                 <>
-                  <span style={{ ...MONO, fontSize: 11, color: "#6b7488" }}>○ local only — sign in to sync across devices</span>
+                  <span style={{ ...MONO, fontSize: 11, color: "#8C968F" }}>○ local only — sign in to sync across devices</span>
                   <button
                     onClick={() => auth.signIn()}
-                    style={{ ...MONO, fontSize: 11, color: "#0a0d13", background: CYAN, border: "none", borderRadius: 6, padding: "5px 12px", cursor: "pointer", fontWeight: 700 }}
+                    style={{ ...MONO, fontSize: 11, color: "#0D1412", background: CYAN, border: "none", borderRadius: 6, padding: "5px 12px", cursor: "pointer", fontWeight: 700 }}
                   >
                     Sign in with Google
                   </button>
@@ -1959,7 +2086,7 @@ export default function App() {
             </div>
           )}
         </div>
-        <div style={{ display: "flex", gap: 7, overflowX: "auto", paddingBottom: 4 }}>
+        <div style={{ display: "flex", gap: 7, flexWrap: "wrap", paddingBottom: 4 }}>
           {TABS.map((t) => (
             <button
               key={t.id}
@@ -1967,9 +2094,9 @@ export default function App() {
               style={{
                 ...MONO, fontSize: 12.5, padding: "8px 13px", borderRadius: 999, whiteSpace: "nowrap",
                 cursor: "pointer", flexShrink: 0,
-                background: tab === t.id ? (t.id === "quiz" ? AMBER : t.id === "learn" ? CYAN : INK) : "transparent",
-                color: tab === t.id ? "#0a0d13" : t.id === "quiz" ? AMBER : t.id === "learn" ? CYAN : DIM,
-                border: `1px solid ${tab === t.id ? (t.id === "quiz" ? AMBER : t.id === "learn" ? CYAN : INK) : t.id === "quiz" ? AMBER + "77" : t.id === "learn" ? CYAN + "77" : "#2c3548"}`,
+                background: tab === t.id ? (t.id === "quiz" ? AMBER : t.id === "practice" ? VIOLET : t.id === "learn" ? CYAN : INK) : PANEL,
+                color: tab === t.id ? "#0D1412" : t.id === "quiz" ? AMBER : t.id === "practice" ? VIOLET : t.id === "learn" ? CYAN : DIM,
+                border: `1px solid ${tab === t.id ? (t.id === "quiz" ? AMBER : t.id === "practice" ? VIOLET : t.id === "learn" ? CYAN : INK) : LINE}`,
                 fontWeight: tab === t.id ? 700 : 400,
                 transition: "all .15s",
               }}
@@ -1979,10 +2106,11 @@ export default function App() {
           ))}
         </div>
         <Active key={tab} goTo={setTab} chap={chap} setChap={setChap} done={done} setDone={setDone} />
-        <div style={{ ...MONO, fontSize: 11.5, color: "#56627a", textAlign: "center", marginTop: 6, lineHeight: 1.8 }}>
+        <div style={{ ...MONO, fontSize: 11.5, color: "#8C968F", textAlign: "center", marginTop: 6, lineHeight: 1.8 }}>
           Every Σ is a for-loop. Every ∇ is a slope. Every σ(·) is a squash. Every E[·] is a weighted average.
         </div>
       </div>
     </div>
   );
 }
+
