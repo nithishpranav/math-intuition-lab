@@ -1,18 +1,22 @@
 // ------------------------------------------------------------------
 // Storage + auth for Math Intuition Lab.
 //
-// Three modes, automatic:
+// Accounts: email + password (open sign-up). Same approach as Sadhana.
+//
+// Modes (automatic):
 //   1. Firebase OFF            -> localStorage only (per device).
-//   2. Firebase ON, signed out -> localStorage only, with a "Sign in" button.
-//   3. Firebase ON, signed in  -> Firestore under your Google account,
-//                                 synced across EVERY device you sign in on,
-//                                 with a localStorage cache so it works offline.
+//   2. Firebase ON, signed out -> localStorage only, with a login form.
+//   3. Firebase ON, signed in  -> Firestore under your account, synced
+//                                 across every device you sign in on, with a
+//                                 localStorage cache so it works offline.
 //
-// Sign in with the SAME Google account on your phone and laptop and the
-// progress is the same on both. That is the cross-device continuity you want.
+// Create an account once, then sign in with the same email + password on any
+// device and your progress is the same everywhere.
 //
-// The app calls: storage.get(key), storage.set(key, value),
-//                auth.signIn(), auth.signOutUser(), auth.onChange(cb), auth.user()
+// The app calls:
+//   storage.get(key), storage.set(key, value)
+//   auth.signUp(email, pw), auth.signIn(email, pw), auth.signOutUser()
+//   auth.resetPassword(email), auth.onChange(cb), auth.user()
 // ------------------------------------------------------------------
 
 import { firebaseConfig, FIREBASE_ON } from "./firebase.config";
@@ -54,10 +58,11 @@ async function loadFirebase() {
     );
     const {
       getAuth,
-      GoogleAuthProvider,
-      signInWithPopup,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
       signOut,
       onAuthStateChanged,
+      sendPasswordResetEmail,
       setPersistence,
       browserLocalPersistence,
     } = await import(
@@ -77,8 +82,10 @@ async function loadFirebase() {
     fb = {
       app, db, auth: authObj,
       doc, getDoc, setDoc,
-      provider: new GoogleAuthProvider(),
-      signInWithPopup, signOut,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut,
+      sendPasswordResetEmail,
     };
     return fb;
   })();
@@ -86,6 +93,19 @@ async function loadFirebase() {
 }
 
 if (FIREBASE_ON) loadFirebase();
+
+// turn Firebase's error codes into friendly messages
+function friendly(e) {
+  const c = (e && e.code) || "";
+  if (c.includes("email-already-in-use")) return "That email already has an account — try signing in.";
+  if (c.includes("invalid-email")) return "That doesn't look like a valid email.";
+  if (c.includes("weak-password")) return "Password must be at least 6 characters.";
+  if (c.includes("wrong-password") || c.includes("invalid-credential")) return "Wrong email or password.";
+  if (c.includes("user-not-found")) return "No account with that email — sign up first.";
+  if (c.includes("too-many-requests")) return "Too many attempts. Wait a moment and try again.";
+  if (c.includes("network")) return "Network problem — check your connection.";
+  return "Something went wrong. Try again.";
+}
 
 // ---------- public storage API ----------
 export const storage = {
@@ -132,19 +152,39 @@ export const auth = {
     cb(currentUser);
     return () => listeners.delete(cb);
   },
-  async signIn() {
-    if (!FIREBASE_ON) return null;
+  async signUp(email, password) {
+    if (!FIREBASE_ON) return { ok: false, error: "Sync is not enabled." };
     const f = await loadFirebase();
     try {
-      const res = await f.signInWithPopup(f.auth, f.provider);
-      return res.user;
-    } catch {
-      return null;
+      const res = await f.createUserWithEmailAndPassword(f.auth, email.trim(), password);
+      return { ok: true, user: res.user };
+    } catch (e) {
+      return { ok: false, error: friendly(e) };
+    }
+  },
+  async signIn(email, password) {
+    if (!FIREBASE_ON) return { ok: false, error: "Sync is not enabled." };
+    const f = await loadFirebase();
+    try {
+      const res = await f.signInWithEmailAndPassword(f.auth, email.trim(), password);
+      return { ok: true, user: res.user };
+    } catch (e) {
+      return { ok: false, error: friendly(e) };
     }
   },
   async signOutUser() {
     if (!FIREBASE_ON) return;
     const f = await loadFirebase();
     try { await f.signOut(f.auth); } catch {}
+  },
+  async resetPassword(email) {
+    if (!FIREBASE_ON) return { ok: false, error: "Sync is not enabled." };
+    const f = await loadFirebase();
+    try {
+      await f.sendPasswordResetEmail(f.auth, email.trim());
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: friendly(e) };
+    }
   },
 };

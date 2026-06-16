@@ -2007,6 +2007,106 @@ const TABS = [
   { id: "quiz", label: "⚡ quiz", C: QuizModule },
 ];
 
+function AuthBar({ user }) {
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState("in"); // "in" | "up" | "reset"
+  const [email, setEmail] = useState("");
+  const [pw, setPw] = useState("");
+  const [msg, setMsg] = useState(null); // {type:'err'|'ok', text}
+  const [busy, setBusy] = useState(false);
+
+  if (user) {
+    return (
+      <div style={{ marginTop: 9, display: "flex", alignItems: "center", gap: 9, flexWrap: "wrap" }}>
+        <span style={{ ...MONO, fontSize: 11, color: GREEN }}>● synced · {user.email}</span>
+        <button
+          onClick={() => auth.signOutUser()}
+          style={{ ...MONO, fontSize: 10.5, color: DIM, background: "transparent", border: `1px solid #394640`, borderRadius: 6, padding: "3px 9px", cursor: "pointer" }}
+        >
+          sign out
+        </button>
+      </div>
+    );
+  }
+
+  const submit = async () => {
+    setMsg(null);
+    if (mode === "reset") {
+      if (!email) { setMsg({ type: "err", text: "Enter your email first." }); return; }
+      setBusy(true);
+      const r = await auth.resetPassword(email);
+      setBusy(false);
+      setMsg(r.ok ? { type: "ok", text: "Reset email sent — check your inbox." } : { type: "err", text: r.error });
+      return;
+    }
+    if (!email || !pw) { setMsg({ type: "err", text: "Enter email and password." }); return; }
+    setBusy(true);
+    const r = mode === "up" ? await auth.signUp(email, pw) : await auth.signIn(email, pw);
+    setBusy(false);
+    if (!r.ok) setMsg({ type: "err", text: r.error });
+    // on success, onChange fires and this component unmounts into the signed-in view
+  };
+
+  const linkBtn = (label, fn) => (
+    <button onClick={fn} style={{ ...MONO, fontSize: 10.5, color: CYAN, background: "transparent", border: "none", cursor: "pointer", padding: 0, textDecoration: "underline" }}>
+      {label}
+    </button>
+  );
+
+  return (
+    <div style={{ marginTop: 9 }}>
+      {!open ? (
+        <div style={{ display: "flex", alignItems: "center", gap: 9, flexWrap: "wrap" }}>
+          <span style={{ ...MONO, fontSize: 11, color: DIM }}>○ saving on this device only</span>
+          <button
+            onClick={() => { setOpen(true); setMode("in"); setMsg(null); }}
+            style={{ ...MONO, fontSize: 11, color: BG, background: CYAN, border: "none", borderRadius: 6, padding: "5px 12px", cursor: "pointer", fontWeight: 700 }}
+          >
+            Sign in / Sign up to sync
+          </button>
+        </div>
+      ) : (
+        <div style={{ background: PANEL2, border: `1px solid ${LINE}`, borderRadius: 10, padding: "12px 13px", maxWidth: 340 }}>
+          <div style={{ ...MONO, fontSize: 11, color: INK, marginBottom: 9, fontWeight: 700 }}>
+            {mode === "up" ? "Create an account" : mode === "reset" ? "Reset password" : "Sign in"}
+          </div>
+          <input
+            type="email" placeholder="email" value={email} autoComplete="email"
+            onChange={(e) => setEmail(e.target.value)}
+            style={{ ...MONO, width: "100%", fontSize: 13, padding: "8px 10px", borderRadius: 7, marginBottom: 7, background: "#0f1916", border: `1px solid ${LINE}`, color: INK, outline: "none", boxSizing: "border-box" }}
+          />
+          {mode !== "reset" && (
+            <input
+              type="password" placeholder="password (min 6 chars)" value={pw}
+              autoComplete={mode === "up" ? "new-password" : "current-password"}
+              onChange={(e) => setPw(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") submit(); }}
+              style={{ ...MONO, width: "100%", fontSize: 13, padding: "8px 10px", borderRadius: 7, marginBottom: 7, background: "#0f1916", border: `1px solid ${LINE}`, color: INK, outline: "none", boxSizing: "border-box" }}
+            />
+          )}
+          {msg && (
+            <div style={{ fontSize: 11.5, color: msg.type === "err" ? ROSE : GREEN, marginBottom: 8, lineHeight: 1.4 }}>{msg.text}</div>
+          )}
+          <button
+            onClick={submit} disabled={busy}
+            style={{ ...MONO, width: "100%", fontSize: 13, padding: "9px 0", borderRadius: 7, cursor: busy ? "default" : "pointer", background: busy ? LINE : CYAN, color: BG, border: "none", fontWeight: 700, marginBottom: 9 }}
+          >
+            {busy ? "…" : mode === "up" ? "Create account" : mode === "reset" ? "Send reset email" : "Sign in"}
+          </button>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+            {mode === "in" && <>{linkBtn("Create an account", () => { setMode("up"); setMsg(null); })}{linkBtn("Forgot password", () => { setMode("reset"); setMsg(null); })}</>}
+            {mode === "up" && linkBtn("Already have an account? Sign in", () => { setMode("in"); setMsg(null); })}
+            {mode === "reset" && linkBtn("Back to sign in", () => { setMode("in"); setMsg(null); })}
+            <button onClick={() => { setOpen(false); setMsg(null); setPw(""); }} style={{ ...MONO, fontSize: 10.5, color: DIM, background: "transparent", border: "none", cursor: "pointer", padding: 0, marginLeft: "auto" }}>
+              close
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function App() {
   const [tab, setTab] = useState("learn");
   const [chap, setChap] = useState(null);
@@ -2058,33 +2158,7 @@ export default function App() {
           <div style={{ fontSize: 13, color: DIM, marginTop: 5, lineHeight: 1.55 }}>
             Choose a role track, build intuition with interactive chapters, then prove you can explain it in open-ended practice.
           </div>
-          {auth.enabled && (
-            <div style={{ marginTop: 9, display: "flex", alignItems: "center", gap: 9, flexWrap: "wrap" }}>
-              {user ? (
-                <>
-                  <span style={{ ...MONO, fontSize: 11, color: GREEN }}>
-                    ● synced{user.email ? " · " + user.email : ""}
-                  </span>
-                  <button
-                    onClick={() => auth.signOutUser()}
-                    style={{ ...MONO, fontSize: 10.5, color: DIM, background: "transparent", border: `1px solid #394640`, borderRadius: 6, padding: "3px 9px", cursor: "pointer" }}
-                  >
-                    sign out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <span style={{ ...MONO, fontSize: 11, color: "#8C968F" }}>○ local only — sign in to sync across devices</span>
-                  <button
-                    onClick={() => auth.signIn()}
-                    style={{ ...MONO, fontSize: 11, color: "#0D1412", background: CYAN, border: "none", borderRadius: 6, padding: "5px 12px", cursor: "pointer", fontWeight: 700 }}
-                  >
-                    Sign in with Google
-                  </button>
-                </>
-              )}
-            </div>
-          )}
+          {auth.enabled && <AuthBar user={user} />}
         </div>
         <div style={{ display: "flex", gap: 7, flexWrap: "wrap", paddingBottom: 4 }}>
           {TABS.map((t) => (
